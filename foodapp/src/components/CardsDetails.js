@@ -11,126 +11,138 @@ const CardsDetails = () => {
   const dispatch = useDispatch();
   const getdata = useSelector((state) => state.cartreducer.carts);
 
-  // Memoize the compare function
+  // Memoized compare function
   const compare = useCallback(() => {
     const comparedata = getdata.filter((e) => e.id === Number(id)); // Convert id to number
     setData(comparedata);
-  }, [getdata, id]); // Add dependencies used inside the function
+  }, [getdata, id]);
 
-  // Add data
+  // Add data to the cart
   const send = (e) => {
     dispatch(ADD(e));
   };
 
-  // Delete item
+  // Delete item from cart
   const dlt = (id) => {
     dispatch(DLT(id));
     history('/');
   };
 
-  // Remove one item
+  // Remove one item from the cart
   const remove = (item) => {
     dispatch(REMOVE(item));
   };
 
   useEffect(() => {
-    compare(); // Call the memoized function
-  }, [compare]); // Include the memoized function as a dependency
+    compare(); // Call memoized compare function
+  }, [compare]);
 
   if (data.length === 0) {
     return <h3 className="text-center">No details found for this item</h3>;
   }
 
+  // Function to handle quantity change
+  const handleQuantityChange = (item, action) => {
+    if (action === 'decrease') {
+      item.qnty <= 1 ? dlt(item.id) : remove(item);
+    } else if (action === 'increase') {
+      send(item);
+    }
+  };
+
   return (
-    <>
-      <div className="container mt-2">
-        <h2 className="text-center">Items Details Page</h2>
-        <section className="container mt-3">
-          <div className="iteamsdetails">
-            {data.map((ele) => (
-              <div key={ele.id}>
-                <div className="items_img">
-                  <img src={ele.imgdata} alt="" />
-                </div>
-                <div className="details">
-                  <Table>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <p>
-                            <strong>Restaurant</strong>: {ele.rname}
-                          </p>
-                          <p>
-                            <strong>Price</strong>: ₹{ele.price}
-                          </p>
-                          <p>
-                            <strong>Dishes</strong>: {ele.address}
-                          </p>
-                          <p>
-                            <strong>Total</strong>: ₹{ele.price * ele.qnty}
-                          </p>
-                          <div
-                            className="mt-5 d-flex justify-content-between align-items-center"
+    <div className="container mt-2">
+      <h2 className="text-center">Item Details Page</h2>
+      <section className="container mt-3">
+        <div className="itemsdetails">
+          {data.map((ele) => (
+            <div key={ele.id}>
+              <div className="items_img">
+                <img src={ele.imgdata} alt={ele.rname} />
+              </div>
+              <div className="details">
+                <Table>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>
+                          <strong>Restaurant</strong>: {ele.rname}
+                        </p>
+                        <p>
+                          <strong>Price</strong>: ₹{ele.price}
+                        </p>
+                        <p>
+                          <strong>Dishes</strong>: {ele.address}
+                        </p>
+                        <p>
+                          <strong>Total</strong>: ₹{ele.price * ele.qnty}
+                        </p>
+                        <div
+                          className="mt-5 d-flex justify-content-between align-items-center"
+                          style={{
+                            width: 100,
+                            cursor: 'pointer',
+                            background: '#ddd',
+                            color: '#111',
+                          }}
+                        >
+                          <span
+                            style={{ fontSize: 24 }}
+                            onClick={() => handleQuantityChange(ele, 'decrease')}
+                          >
+                            -
+                          </span>
+                          <span style={{ fontSize: 22 }}>{ele.qnty}</span>
+                          <span
+                            style={{ fontSize: 24 }}
+                            onClick={() => handleQuantityChange(ele, 'increase')}
+                          >
+                            +
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <p>
+                          <strong>Rating:</strong>{' '}
+                          <span
                             style={{
-                              width: 100,
-                              cursor: 'pointer',
-                              background: '#ddd',
-                              color: '#111',
+                              background: 'green',
+                              color: '#fff',
+                              padding: '2px 5px',
+                              borderRadius: '5px',
                             }}
                           >
-                            <span
-                              style={{ fontSize: 24 }}
-                              onClick={
-                                ele.qnty <= 1 ? () => dlt(ele.id) : () => remove(ele)
-                              }
-                            >
-                              -
-                            </span>
-                            <span style={{ fontSize: 22 }}>{ele.qnty}</span>
-                            <span style={{ fontSize: 24 }} onClick={() => send(ele)}>
-                              +
-                            </span>
-                          </div>
-                        </td>
-                        <td>
-                          <p>
-                            <strong>Rating :</strong>{' '}
-                            <span
+                            {ele.rating} ★
+                          </span>
+                        </p>
+                        <p>
+                          <strong>Order Review:</strong>{' '}
+                          <span>{ele.somedata}</span>
+                        </p>
+                        <p>
+                          <strong>Remove:</strong>
+                          <span>
+                            <i
+                              className="fas fa-trash"
+                              onClick={() => dlt(ele.id)}
                               style={{
-                                background: 'green',
-                                color: '#fff',
-                                padding: '2px 5px',
-                                borderRadius: '5px',
+                                color: 'red',
+                                fontSize: 20,
+                                cursor: 'pointer',
                               }}
-                            >
-                              {ele.rating} ★
-                            </span>
-                          </p>
-                          <p>
-                            <strong>Order Review :</strong>{' '}
-                            <span>{ele.somedata}</span>
-                          </p>
-                          <p>
-                            <strong>Remove :</strong>{' '}
-                            <span>
-                              <i
-                                className="fas fa-trash"
-                                onClick={() => dlt(ele.id)}
-                                style={{ color: 'red', fontSize: 20, cursor: 'pointer' }}
-                              ></i>
-                            </span>
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+                            ></i>
+                          </span>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
-    </>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 };
 

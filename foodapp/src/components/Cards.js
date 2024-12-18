@@ -6,6 +6,7 @@ import './style.css';
 import { useDispatch } from 'react-redux';
 import { ADD } from '../redux/actions/action';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { toast } from 'react-hot-toast'; // Import toast from react-hot-toast
 
 const Cards = () => {
   const [data, setData] = useState(Cardsdata);
@@ -13,7 +14,8 @@ const Cards = () => {
   const navigate = useNavigate(); // Initialize navigate function
 
   const send = (e) => {
-    dispatch(ADD(e));
+    dispatch(ADD(e)); // Dispatch the action to add the item
+    toast.success(`${e.rname} has been added to the cart!`); // Show toast notification
   };
 
   const goToDetails = (id) => {
@@ -35,14 +37,13 @@ const Cards = () => {
               <Card.Img
                 variant="top"
                 src={element.imgdata}
-                style={{ height: '16rem' }}
+                style={{ height: '16rem',cursor: 'pointer' }}
                 className="mt-3"
                 onClick={() => goToDetails(element.id)} // Add navigation on image click
-                style={{ cursor: 'pointer' }}
               />
               <Card.Body>
                 <Card.Title>{element.rname}</Card.Title>
-                <Card.Text>Price : ₹ {element.price}</Card.Text>
+                <Card.Text>Price : ₹$ {element.price}</Card.Text>
                 <div className="button_div d-flex justify-content-center">
                   <Button
                     variant="primary"
