@@ -13,11 +13,13 @@ const Cards = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize navigate function
 
+  // Function to add item to cart
   const send = (e) => {
     dispatch(ADD(e)); // Dispatch the action to add the item
     toast.success(`${e.rname} has been added to the cart!`); // Show toast notification
   };
 
+  // Function to navigate to details page
   const goToDetails = (id) => {
     navigate(`/cart/${id}`); // Navigate to the details page
   };
@@ -27,23 +29,23 @@ const Cards = () => {
       <h2 className="text-center">Add to Cart Projects</h2>
 
       <div className="row d-flex justify-content-center align-items-center">
-        {data.map((element, id) => {
+        {data.map((element) => {
           return (
             <Card
               style={{ width: '22rem', border: 'none' }}
               className="mx-2 mt-4 card_style"
-              key={id}
+              key={element.id}
             >
               <Card.Img
                 variant="top"
                 src={element.imgdata}
-                style={{ height: '16rem',cursor: 'pointer' }}
+                style={{ height: '16rem', cursor: 'pointer' }}
                 className="mt-3"
                 onClick={() => goToDetails(element.id)} // Add navigation on image click
               />
               <Card.Body>
                 <Card.Title>{element.rname}</Card.Title>
-                <Card.Text>Price : ₹$ {element.price}</Card.Text>
+                <Card.Text>Price : ₹{element.price}</Card.Text>
                 <div className="button_div d-flex justify-content-center">
                   <Button
                     variant="primary"
@@ -53,6 +55,7 @@ const Cards = () => {
                     Add to Cart
                   </Button>
                 </div>
+                {/* View Details Button */}
                 <Button
                   variant="info"
                   className="mt-2 col-lg-12"

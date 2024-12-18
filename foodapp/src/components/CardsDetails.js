@@ -3,29 +3,41 @@ import Table from 'react-bootstrap/Table';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DLT, ADD, REMOVE } from '../redux/actions/action';
+import Cardsdata from './CardsData'; // Import your cards data
 
 const CardsDetails = () => {
   const [data, setData] = useState([]);
   const { id } = useParams();
   const history = useNavigate();
   const dispatch = useDispatch();
-  const getdata = useSelector((state) => state.cartreducer.carts);
+  const getdata = useSelector((state) => state.cartreducer.carts); // Get data from Redux store
 
-  // Memoized compare function
+  // Memoized compare function to fetch details for the selected item
   const compare = useCallback(() => {
-    const comparedata = getdata.filter((e) => e.id === Number(id)); // Convert id to number
-    setData(comparedata);
+    // Find the card details by comparing the id
+    const itemDetails = Cardsdata.find((item) => item.id === Number(id)); // Find in CardsData
+    if (itemDetails) {
+      const itemInCart = getdata.find((e) => e.id === Number(id)); // Check if it's in the cart
+      if (itemInCart) {
+        // If item is in cart, update with quantity
+        itemDetails.qnty = itemInCart.qnty;
+      } else {
+        // If not in cart, set default quantity as 0 or 1
+        itemDetails.qnty = 1;
+      }
+      setData([itemDetails]); // Set the item details in state
+    }
   }, [getdata, id]);
 
   // Add data to the cart
   const send = (e) => {
-    dispatch(ADD(e));
+    dispatch(ADD(e)); // Dispatch action to add item to cart
   };
 
   // Delete item from cart
   const dlt = (id) => {
     dispatch(DLT(id));
-    history('/');
+    history('/'); // Navigate back to the main page after deletion
   };
 
   // Remove one item from the cart
@@ -37,6 +49,7 @@ const CardsDetails = () => {
     compare(); // Call memoized compare function
   }, [compare]);
 
+  // If no item is found, show a message
   if (data.length === 0) {
     return <h3 className="text-center">No details found for this item</h3>;
   }
@@ -44,9 +57,18 @@ const CardsDetails = () => {
   // Function to handle quantity change
   const handleQuantityChange = (item, action) => {
     if (action === 'decrease') {
-      item.qnty <= 1 ? dlt(item.id) : remove(item);
+      if (item.qnty <= 1) {
+        // If quantity is 1, remove the item from the cart
+        dlt(item.id);
+      } else {
+        // Decrease the quantity
+        item.qnty -= 1;
+        dispatch(REMOVE(item)); // Remove the item and update
+        dispatch(ADD(item)); // Add it again with updated quantity
+      }
     } else if (action === 'increase') {
-      send(item);
+      item.qnty += 1; // Increase the quantity
+      dispatch(ADD(item)); // Add it again with updated quantity
     }
   };
 
