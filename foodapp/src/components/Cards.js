@@ -5,18 +5,26 @@ import Cardsdata from './CardsData';
 import './style.css';
 import { useDispatch } from 'react-redux';
 import { ADD } from '../redux/actions/action';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { toast } from 'react-hot-toast'; // Import toast from react-hot-toast
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Cards = () => {
   const [data, setData] = useState(Cardsdata);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize navigate function
 
-  // Function to add item to cart
+  //Function to add item to cart
   const send = (e) => {
     dispatch(ADD(e)); // Dispatch the action to add the item
-    toast.success(`${e.rname} has been added to the cart!`); // Show toast notification
+  toast.success(`${e.rname} added to the cart!`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   // Function to navigate to details page

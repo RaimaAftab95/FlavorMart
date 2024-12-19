@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DLT, ADD, REMOVE } from '../redux/actions/action';
 import Cardsdata from './CardsData'; // Import your cards data
+import { toast } from 'react-toastify';
 
 const CardsDetails = () => {
   const [data, setData] = useState([]);
@@ -32,11 +33,29 @@ const CardsDetails = () => {
   // Add data to the cart
   const send = (e) => {
     dispatch(ADD(e)); // Dispatch action to add item to cart
+    toast.success(`${e.rname} added to the cart!`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
   };
 
   // Delete item from cart
   const dlt = (id) => {
     dispatch(DLT(id));
+     toast.error(`Item removed from the cart!`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
     history('/'); // Navigate back to the main page after deletion
   };
 

@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from 'react-bootstrap/esm/Table';
 import { DLT } from '../redux/actions/action';
+import { toast } from 'react-toastify';
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -31,7 +32,20 @@ const Header = () => {
 
     const dlt = (id) => {
         dispatch(DLT(id));
+        toast.error(`Item removed from the cart!`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
     };
+
+    const totalQuantity = useMemo(() => {
+    return getdata.reduce((acc, item) => acc + item.qnty, 0); // Summing the quantity of each item
+}, [getdata]);
 
     return (
         <>
@@ -42,7 +56,10 @@ const Header = () => {
                         <NavLink to="/" className="text-decoration-none text-light">Home</NavLink>
                     </Nav>
 
-                    <Badge badgeContent={getdata.length} color="primary"
+                    <Badge 
+                    //badgeContent={getdata.length} 
+                        badgeContent={totalQuantity}
+                        color="primary"
                         id="basic-button"
                         aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup="true"
