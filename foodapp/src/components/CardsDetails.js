@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Table from 'react-bootstrap/Table';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { DLT, ADD, REMOVE } from '../redux/actions/action';
+import { DLT, ADD, REMOVE, UPDATE_QTY } from '../redux/actions/action';
 import Cardsdata from './CardsData'; // Import your cards data
 import { toast } from 'react-toastify';
 
@@ -34,28 +34,28 @@ const CardsDetails = () => {
   const send = (e) => {
     dispatch(ADD(e)); // Dispatch action to add item to cart
     toast.success(`${e.rname} added to the cart!`, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   // Delete item from cart
   const dlt = (id) => {
     dispatch(DLT(id));
-     toast.error(`Item removed from the cart!`, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+    toast.error(`Item removed from the cart!`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     history('/'); // Navigate back to the main page after deletion
   };
 
@@ -74,22 +74,22 @@ const CardsDetails = () => {
   }
 
   // Function to handle quantity change
-  const handleQuantityChange = (item, action) => {
-    if (action === 'decrease') {
-      if (item.qnty <= 1) {
-        // If quantity is 1, remove the item from the cart
-        dlt(item.id);
-      } else {
-        // Decrease the quantity
-        item.qnty -= 1;
-        dispatch(REMOVE(item)); // Remove the item and update
-        dispatch(ADD(item)); // Add it again with updated quantity
-      }
-    } else if (action === 'increase') {
-      item.qnty += 1; // Increase the quantity
-      dispatch(ADD(item)); // Add it again with updated quantity
+ const handleQuantityChange = (item, action) => {
+  let updatedItem = { ...item }; // Create a copy of the item to update
+
+  if (action === 'decrease') {
+    if (updatedItem.qnty > 1) {
+      updatedItem.qnty -= 1; // Decrease quantity by 1
+      dispatch(UPDATE_QTY(updatedItem.id, updatedItem.qnty));  // Dispatch updated quantity
+    } else {
+      dispatch(DLT(updatedItem.id)); // Remove item if quantity reaches 0
     }
-  };
+  } else if (action === 'increase') {
+    updatedItem.qnty += 1;  // Increase quantity by 1
+    dispatch(ADD(updatedItem));  // Dispatch updated item with increased quantity
+  }
+};
+
 
   return (
     <div className="container mt-2">
@@ -188,3 +188,4 @@ const CardsDetails = () => {
 };
 
 export default CardsDetails;
+

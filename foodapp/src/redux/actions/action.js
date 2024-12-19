@@ -14,6 +14,8 @@ export const UPDATE_QTY = (id, qnty) => {
   };
 };
 
+
+
 // Remove an item from the cart
 export const DLT = (id) => {
   return {
