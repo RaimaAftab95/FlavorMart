@@ -33,29 +33,13 @@ const CardsDetails = () => {
   // Add data to the cart
   const send = (e) => {
     dispatch(ADD(e)); // Dispatch action to add item to cart
-    toast.success(`${e.rname} added to the cart!`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toast.success(`${e.rname} added to the cart!`);
   };
 
   // Delete item from cart
   const dlt = (id) => {
     dispatch(DLT(id));
-    toast.error(`Item removed from the cart!`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toast.error(`Item removed from the cart!`);
     history('/'); // Navigate back to the main page after deletion
   };
 
@@ -74,22 +58,30 @@ const CardsDetails = () => {
   }
 
   // Function to handle quantity change
- const handleQuantityChange = (item, action) => {
-  let updatedItem = { ...item }; // Create a copy of the item to update
+const handleQuantityChange = (item, action) => {
+  const MIN_QUANTITY = 1; 
+  const MAX_QUANTITY = 10;
+  let updatedItem = { ...item }; // Clone item to update
 
   if (action === 'decrease') {
-    if (updatedItem.qnty > 1) {
-      updatedItem.qnty -= 1; // Decrease quantity by 1
-      dispatch(UPDATE_QTY(updatedItem.id, updatedItem.qnty));  // Dispatch updated quantity
+    if (updatedItem.qnty <= MIN_QUANTITY) {
+      toast.info(`You can't have less than ${MIN_QUANTITY} item${MIN_QUANTITY > 1 ? 's' : ''} in the cart!`);
+      return;
     } else {
-      dispatch(DLT(updatedItem.id)); // Remove item if quantity reaches 0
+      updatedItem.qnty -= 1;
+      dispatch(UPDATE_QTY(updatedItem.id, updatedItem.qnty));
+      toast.error('Item quantity decreased!');
     }
   } else if (action === 'increase') {
-    updatedItem.qnty += 1;  // Increase quantity by 1
-    dispatch(ADD(updatedItem));  // Dispatch updated item with increased quantity
+    if (updatedItem.qnty >= MAX_QUANTITY) {
+      toast.warning(`You can't add more than ${MAX_QUANTITY} items!`);
+      return;
+    }
+    updatedItem.qnty += 1;
+    dispatch(ADD(updatedItem));
+    toast.info('Item quantity increased!');
   }
 };
-
 
   return (
     <div className="container mt-2">
