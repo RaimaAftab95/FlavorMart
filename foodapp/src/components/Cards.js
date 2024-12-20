@@ -56,17 +56,19 @@ const Cards = () => {
                 <Card.Text>Price : ₹{element.price}</Card.Text>
                 <div className="button_div d-flex justify-content-center">
                   <Button
-                    variant="primary"
+                    //variant="primary"
+                    //style={{ backgroundColor: '#9b59b6', borderColor: '#9b59b6' }}
                     onClick={() => send(element)}
-                    className="col-lg-12"
+                    className="col-lg-12 custom-purple-btn"
                   >
                     Add to Cart
                   </Button>
                 </div>
                 {/* View Details Button */}
                 <Button
-                  variant="info"
-                  className="mt-2 col-lg-12"
+                  //variant="info"
+                  //style={{ backgroundColor: '#9b59b6', borderColor: '#9b59b6' }}
+                  className="mt-2 col-lg-12 custom-purple-btn"
                   onClick={() => goToDetails(element.id)} // Add navigation on button click
                 >
                   View Details

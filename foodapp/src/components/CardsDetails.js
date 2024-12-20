@@ -24,7 +24,7 @@ const CardsDetails = () => {
         itemDetails.qnty = itemInCart.qnty;
       } else {
         // If not in cart, set default quantity as 0 or 1
-        itemDetails.qnty = 1;
+        itemDetails.qnty = 0;
       }
       setData([itemDetails]); // Set the item details in state
     }
@@ -112,12 +112,14 @@ const handleQuantityChange = (item, action) => {
                         </p>
                         <div
                           className="mt-5 d-flex justify-content-between align-items-center"
-                          style={{
-                            width: 100,
-                            cursor: 'pointer',
-                            background: '#ddd',
-                            color: '#111',
-                          }}
+                           style={{
+                              width: 100,
+                              cursor: 'pointer',
+                              background: '#9b59b6',
+                              color: '#fff',
+                              padding: '2px 5px',
+                              borderRadius: '5px',
+                            }}
                         >
                           <span
                             style={{ fontSize: 24 }}
@@ -139,7 +141,7 @@ const handleQuantityChange = (item, action) => {
                           <strong>Rating:</strong>{' '}
                           <span
                             style={{
-                              background: 'green',
+                              background: '#9b59b6',
                               color: '#fff',
                               padding: '2px 5px',
                               borderRadius: '5px',

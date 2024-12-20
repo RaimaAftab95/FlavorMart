@@ -1,16 +1,16 @@
-.card_style {
-  cursor: pointer;
-  transition: 0.3s;
-}
-
 .smalltrash {
   display: none;
 }
 
-.card_style:hover {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.082);
+.card_style {
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 8px;
 }
 
+.card_style:hover {
+  box-shadow: 0 0 10px 2px rgba(155, 89, 182, 0.5);
+}
 .iteamsdetails {
   max-width: 800px;
   margin: auto;
@@ -31,8 +31,20 @@
   flex: 0.5;
 }
 
-.rating {
+/* .rating {
   background-color: green;
+} */
+
+.custom-purple-btn {
+  background-color: #9b59b6;
+  border-color: #9b59b6;
+  color: #fff;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.custom-purple-btn:hover {
+  background-color: #8e44ad;
+  border-color: #8e44ad;
 }
 
 @media (max-width: 772px) {
